@@ -4,6 +4,7 @@ const app = express();
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
 const port = process.env.PORT || 5000;
+const ObjectId = require('mongodb').ObjectId;
 
 // MiddleWare
 app.use(cors());
@@ -25,7 +26,14 @@ async function run() {
             const cursor = ssdCollection.find({});
             const result = await cursor.toArray();
             res.send(result);
-        })
+        });
+        // GET Single Product
+        app.get('/products/:productId', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await ssdCollection.findOne(query);
+            res.json(result);
+        });
 
 
     }
